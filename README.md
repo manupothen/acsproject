@@ -16,7 +16,7 @@ Pre-requisites :
 	> ssh-keygen -t rsa -f ~/.ssh/Group25-dev
 
 5. Copy SSH key to webserver folder :
-	> cp ~/.ssh/Group25-dev.pub ~/environment/project/dev/webservers
+	> cp ~/.ssh/Group25-dev.pub ~/environment/project/project/dev/webservers
 
 #############################
 Instructions for deployment :
