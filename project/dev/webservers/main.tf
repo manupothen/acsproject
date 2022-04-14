@@ -26,12 +26,12 @@ data "terraform_remote_state" "network" {
 # Define tags locally
 locals {
   default_tags = merge(module.globalvars.default_tags, { "env" = var.env })
-  prefix = module.globalvars.prefix
+  prefix       = module.globalvars.prefix
   name_prefix  = "${local.prefix}-${var.env}"
 }
 
 # Retrieve global variables from the Terraform module
-module "globalvars"{
+module "globalvars" {
   source = "../../../modules/globalvars"
 }
 
@@ -45,19 +45,19 @@ resource "aws_lb_target_group" "test" {
 
 # Application Load Balancer
 resource "aws_lb" "application_load_balancer" {
-  name               = "application-load-balancer"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.lb_sg.id]
-  subnets            = data.terraform_remote_state.network.outputs.public_subnet_id
+  name                       = "application-load-balancer"
+  internal                   = false
+  load_balancer_type         = "application"
+  security_groups            = [aws_security_group.lb_sg.id]
+  subnets                    = data.terraform_remote_state.network.outputs.public_subnet_id
   enable_deletion_protection = false
 }
 
 resource "aws_lb_listener" "lb_listener_http" {
-   load_balancer_arn    = aws_lb.application_load_balancer.id
-   port                 = "80"
-   protocol             = "HTTP"
-   default_action {
+  load_balancer_arn = aws_lb.application_load_balancer.id
+  port              = "80"
+  protocol          = "HTTP"
+  default_action {
     target_group_arn = aws_lb_target_group.test.id
     type             = "forward"
   }
@@ -65,26 +65,26 @@ resource "aws_lb_listener" "lb_listener_http" {
 
 # Launch Configuration
 resource "aws_launch_configuration" "linux" {
-  name          = "linux"
-  image_id      = "ami-0c02fb55956c7d316"
-  instance_type = var.instance_type
-  security_groups    = [aws_security_group.lb_sg.id]
-  key_name      = aws_key_pair.web_key.key_name
+  name                        = "linux"
+  image_id                    = "ami-0c02fb55956c7d316"
+  instance_type               = var.instance_type
+  security_groups             = [aws_security_group.lb_sg.id]
+  key_name                    = aws_key_pair.web_key.key_name
   associate_public_ip_address = true
-  iam_instance_profile = "LabInstanceProfile"
-  user_data = filebase64("${path.module}/install_httpd.sh")
+  iam_instance_profile        = "LabInstanceProfile"
+  user_data                   = filebase64("${path.module}/install_httpd.sh")
 }
 
 # Auto Scaling Group
 resource "aws_autoscaling_group" "asg" {
-  name               = "project-asg"
-  desired_capacity   = 1
-  max_size           = 2
-  min_size           = 1
+  name                 = "project-asg"
+  desired_capacity     = 1
+  max_size             = 2
+  min_size             = 1
   launch_configuration = aws_launch_configuration.linux.name
-  vpc_zone_identifier       = [data.terraform_remote_state.network.outputs.private_subnet_id[0],data.terraform_remote_state.network.outputs.private_subnet_id[1],data.terraform_remote_state.network.outputs.private_subnet_id[2]]
-  depends_on = [aws_lb.application_load_balancer]
-  target_group_arns = [aws_lb_target_group.test.arn]
+  vpc_zone_identifier  = [data.terraform_remote_state.network.outputs.private_subnet_id[0], data.terraform_remote_state.network.outputs.private_subnet_id[1], data.terraform_remote_state.network.outputs.private_subnet_id[2]]
+  depends_on           = [aws_lb.application_load_balancer]
+  target_group_arns    = [aws_lb_target_group.test.arn]
 }
 
 resource "aws_autoscaling_policy" "asg_policy" {
@@ -92,11 +92,11 @@ resource "aws_autoscaling_policy" "asg_policy" {
   name                   = "autoscaling"
   policy_type            = "TargetTrackingScaling"
   target_tracking_configuration {
-  predefined_metric_specification {
-    predefined_metric_type = "ASGAverageCPUUtilization"
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+    target_value = 10
   }
-  target_value = 10
-}
 }
 
 # Bastion host VM
