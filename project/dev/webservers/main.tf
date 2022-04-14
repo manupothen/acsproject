@@ -180,7 +180,7 @@ resource "aws_security_group" "lb_sg" {
 
   tags = merge(local.default_tags,
     {
-      "Name" = "${local.name_prefix}-Sg-LB"
+      "Name" = "${local.name_prefix}-SG-LB"
     }
   )
 }
