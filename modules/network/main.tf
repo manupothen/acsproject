@@ -79,7 +79,7 @@ resource "aws_eip" "eip_for_nat_gateway" {
   vpc = true
   tags = merge(local.default_tags,
     {
-      "Name" = "${local.name_prefix}-eip"
+      "Name" = "${local.name_prefix}-EIP"
     }
   )
 }
