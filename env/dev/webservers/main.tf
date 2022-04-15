@@ -45,7 +45,7 @@ resource "aws_lb_target_group" "test" {
 
 # Application Load Balancer
 resource "aws_lb" "application_load_balancer" {
-  name               = "application-load-balancer"
+  name               = "Dev-load-balancer"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.lb_sg.id]
