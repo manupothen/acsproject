@@ -23,11 +23,11 @@ Instructions for deployment :
 #############################
 
 1. Change the working directory to dev-network :
-	> cd ~/environment/project/dev/network
+	> cd ~/environment/project/project/dev/network
 	> terraform init
 	> terraform apply --auto-approve
 
 2. Change the working directory to dev-webservers :
-	> cd ~/environment/project/dev/webservers
+	> cd ~/environment/project/project/dev/webservers
 	> terraform init
 	> terraform apply --auto-approve
