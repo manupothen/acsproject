@@ -53,3 +53,8 @@ dkms.conf
 
 #terraform
 .terraform
+
+#ssh key
+.pub
+
+.hcl
