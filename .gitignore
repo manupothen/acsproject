@@ -55,6 +55,7 @@ dkms.conf
 .terraform
 
 #ssh key
-.pub
-
-.hcl
+*.pub
+id_rsa
+*.pem
+*.key
