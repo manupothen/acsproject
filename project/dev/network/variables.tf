@@ -33,7 +33,7 @@ variable "private_subnet_cidrs" {
 variable "vpc_cidr" {
   default     = "10.100.0.0/16"
   type        = string
-  description = "VPC for dev/staging/prod environment"
+  description = "VPC for Dev environment"
 }
 
 # Variable to signal the current environment 
